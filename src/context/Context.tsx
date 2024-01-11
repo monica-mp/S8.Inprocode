@@ -20,9 +20,12 @@ interface Props{
 // Definition of the properties of the context
 interface ContextProps {
   weeksArray: weekExpenses[],
+  totalWeekBalance: number
+  
 }
 
-interface weekExpenses {
+
+interface weekExpenses {    
     monday: number,
     tuesday: number,
     wednesday: number,
@@ -36,7 +39,7 @@ interface weekExpenses {
 export const ContextProvider: React.FC<Props> = ({children}) =>{
    
     const weeksArray: weekExpenses[] = [
-      { 
+      {         
         monday: 230,
         tuesday: 340,
         wednesday: 50,
@@ -45,7 +48,7 @@ export const ContextProvider: React.FC<Props> = ({children}) =>{
         saturday: 235,
         sunday: 545
     },
-    { 
+    {         
         monday: 100,
         tuesday: 35,
         wednesday: 125,
@@ -54,7 +57,7 @@ export const ContextProvider: React.FC<Props> = ({children}) =>{
         saturday: 310,
         sunday: 500
     },
-    { 
+    {         
         monday: 300,
         tuesday: 280,
         wednesday: 95,
@@ -63,7 +66,7 @@ export const ContextProvider: React.FC<Props> = ({children}) =>{
         saturday: 125,
         sunday: 270
     },
-    { 
+    {         
         monday: 230,
         tuesday: 35,
         wednesday: 25,
@@ -74,11 +77,15 @@ export const ContextProvider: React.FC<Props> = ({children}) =>{
     },
   ]
 
+    const firstWeekBalance = weeksArray[0];
+    const totalWeekBalance = Object.values(firstWeekBalance).reduce((total, current) => total + current, 0)
+
 
 
 
     const contextValue: ContextProps = {
-        weeksArray
+        weeksArray,
+        totalWeekBalance
     }
     
 
