@@ -26,13 +26,7 @@ interface ContextProps {
 
 
 interface weekExpenses {    
-    monday: number,
-    tuesday: number,
-    wednesday: number,
-    thursday: number,
-    friday: number,
-    saturday: number,
-    sunday: number
+  [day: string]: number
 }
 
 
