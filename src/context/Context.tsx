@@ -20,7 +20,10 @@ interface Props{
 // Definition of the properties of the context
 interface ContextProps {
   weeksArray: weekExpenses[],
-  totalWeekBalance: number
+  totalWeekBalance: number,
+  todayExpense: number,
+  yesterdayExpense: number,
+  percentageChange: string
   
 }
 
@@ -34,52 +37,76 @@ export const ContextProvider: React.FC<Props> = ({children}) =>{
    
     const weeksArray: weekExpenses[] = [
       {         
-        monday: 230,
-        tuesday: 340,
-        wednesday: 50,
-        thursday: 120,
-        friday: 335,
-        saturday: 235,
-        sunday: 545
+        dilluns: 230,
+        dimarts: 340,
+        dimecres: 50,
+        dijous: 120,
+        divendres: 335,
+        dissabte: 235,
+        diumenge: 545
     },
     {         
-        monday: 100,
-        tuesday: 35,
-        wednesday: 125,
-        thursday: 565,
-        friday: 10,
-        saturday: 310,
-        sunday: 500
+        dilluns: 100,
+        dimarts: 35,
+        dimecres: 125,
+        dijous: 565,
+        divendres: 10,
+        dissabte: 310,
+        diumenge: 500
     },
     {         
-        monday: 300,
-        tuesday: 280,
-        wednesday: 95,
-        thursday: 45,
-        friday: 120,
-        saturday: 125,
-        sunday: 270
+        dilluns: 300,
+        dimarts: 280,
+        dimecres: 95,
+        dijous: 45,
+        divendres: 120,
+        dissabte: 125,
+        diumenge: 270
     },
     {         
-        monday: 230,
-        tuesday: 35,
-        wednesday: 25,
-        thursday: 75,
-        friday: 115,
-        saturday: 65,
-        sunday: 10
+        dilluns: 230,
+        dimarts: 35,
+        dimecres: 25,
+        dijous: 75,
+        divendres: 115,
+        dissabte: 65,
+        diumenge: 10
     },
   ]
 
-    const firstWeekBalance = weeksArray[0];
-    const totalWeekBalance = Object.values(firstWeekBalance).reduce((total, current) => total + current, 0)
+    const calculateWeekBalance = (week: weekExpenses): number => {
+      return Object.values(week).reduce((total, current) => total + current, 0);
+    };   
 
+    const totalWeekBalance = calculateWeekBalance(weeksArray[0]);
 
-
+    const getAdjustedDayIndex = (dayIndex: number): number => {
+      return dayIndex === -1 ? 6 : (dayIndex === 0 ? 6 : dayIndex - 1);
+    };
+  
+    const getExpenseForDay = (dayIndex: number): number => {
+      const adjustedIndex = getAdjustedDayIndex(dayIndex);
+      const day = Object.keys(weeksArray[0])[adjustedIndex];    
+      return weeksArray[0][day];
+    };
+    
+    const todayExpense = getExpenseForDay(new Date().getDay());
+    const yesterdayExpense = getExpenseForDay(new Date().getDay() - 1);
+    
+    const calculatePercentageChange = (currentValue: number, previousValue: number): number => {
+      return ((currentValue - previousValue) / previousValue) * 100;
+    };
+  
+    const percentageChange = calculatePercentageChange(todayExpense, yesterdayExpense).toFixed(2);
+    
+    
 
     const contextValue: ContextProps = {
         weeksArray,
-        totalWeekBalance
+        totalWeekBalance,
+        todayExpense,
+        yesterdayExpense,
+        percentageChange
     }
     
 
