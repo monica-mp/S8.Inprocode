@@ -88,27 +88,28 @@ export const ContextProvider: React.FC<Props> = ({children}) =>{
     },
   ]
 
+    //Total balance for the week
     const calculateWeekBalance = (week: weekExpenses): number => {
       return Object.values(week).reduce((total, current) => total + current, 0);
-    };   
-
+    };
     const totalWeekBalance = calculateWeekBalance(weeksArray[currentWeek]);
 
+    //Get the day of the week
     const getAdjustedDayIndex = (dayIndex: number): number => {
       return dayIndex === -1 ? 6 : (dayIndex === 0 ? 6 : dayIndex - 1);
     };
   
+    //Get the expense for the day
     const getExpenseForDay = (dayIndex: number): number => {
       const adjustedIndex = getAdjustedDayIndex(dayIndex);
       const day = Object.keys(weeksArray[currentWeek])[adjustedIndex];    
       return weeksArray[currentWeek][day];
-    };
-    
+    };    
     const todayExpense = getExpenseForDay(new Date().getDay());
     const yesterdayExpense = getExpenseForDay(new Date().getDay() - 1);
 
     
-
+    //Get the percentage change
     const calculatePercentageChange = (currentValue: number, previousValue: number): number => {
       return ((currentValue - previousValue) / previousValue) * 100;
     };
@@ -116,11 +117,11 @@ export const ContextProvider: React.FC<Props> = ({children}) =>{
     const percentageChange = Number(calculatePercentageChange(todayExpense, yesterdayExpense).toFixed(2));
     const sign = percentageChange > 0 ? '+' : ''
     
+    //Get the days and expenses for the graph
     const daysData = Object.keys(weeksArray[currentWeek]).map(day => t(`days.${day}`));
     const expensesDayData = Object.values(weeksArray[currentWeek]);
     
-    //N2. Change week
-    
+    //N2. Change week    
     const changeWeek = (direction: 'next' | 'prev'): void => {
       const newWeek = direction === 'next' ? currentWeek + 1 : currentWeek - 1;
   

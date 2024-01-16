@@ -24,6 +24,7 @@ import {
     Legend
   );
   
+  //Options
   export const options = {
     responsive: true,
     plugins: {
@@ -48,6 +49,7 @@ import {
       }
   };
   
+  //Graphics
   export function Graphics() {
   const { daysData, expensesDayData } = useElements();
   const { t } = useTranslation();
