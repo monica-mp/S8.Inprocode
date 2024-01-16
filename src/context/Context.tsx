@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useContext } from "react";
+import { useTranslation } from 'react-i18next'
 
 // Creation of the context
 const Context = createContext<ContextProps | undefined>(undefined)
@@ -23,54 +24,65 @@ interface ContextProps {
   totalWeekBalance: number,
   todayExpense: number,
   yesterdayExpense: number,
-  percentageChange: string
-  
+  percentageChange: number
+  daysData: string[],
+  expensesDayData: number[],
+  sign: string
 }
 
 
 interface weekExpenses {    
-  [day: string]: number
+  [key: string]: number
+  Monday: number
+  Tuesday: number
+  Wednesday: number
+  Thursday: number
+  Friday: number
+  Saturday: number
+  Sunday: number
 }
 
 
 export const ContextProvider: React.FC<Props> = ({children}) =>{
-   
+   const {t} = useTranslation();
+
+
     const weeksArray: weekExpenses[] = [
       {         
-        dilluns: 230,
-        dimarts: 340,
-        dimecres: 50,
-        dijous: 120,
-        divendres: 335,
-        dissabte: 235,
-        diumenge: 545
+        Monday: 230,
+        Tuesday: 340,
+        Wednesday: 50,
+        Thursday: 120,
+        Friday: 335,
+        Saturday: 235,
+        Sunday: 545
     },
     {         
-        dilluns: 100,
-        dimarts: 35,
-        dimecres: 125,
-        dijous: 565,
-        divendres: 10,
-        dissabte: 310,
-        diumenge: 500
+        Monday: 100,
+        Tuesday: 35,
+        Wednesday: 125,
+        Thursday: 565,
+        Friday: 10,
+        Saturday: 310,
+        Sunday: 500
     },
     {         
-        dilluns: 300,
-        dimarts: 280,
-        dimecres: 95,
-        dijous: 45,
-        divendres: 120,
-        dissabte: 125,
-        diumenge: 270
+        Monday: 300,
+        Tuesday: 280,
+        Wednesday: 95,
+        Thursday: 45,
+        Friday: 120,
+        Saturday: 125,
+        Sunday: 270
     },
     {         
-        dilluns: 230,
-        dimarts: 35,
-        dimecres: 25,
-        dijous: 75,
-        divendres: 115,
-        dissabte: 65,
-        diumenge: 10
+        Monday: 230,
+        Tuesday: 35,
+        Wednesday: 25,
+        Thursday: 75,
+        Friday: 115,
+        Saturday: 65,
+        Sunday: 10
     },
   ]
 
@@ -92,13 +104,18 @@ export const ContextProvider: React.FC<Props> = ({children}) =>{
     
     const todayExpense = getExpenseForDay(new Date().getDay());
     const yesterdayExpense = getExpenseForDay(new Date().getDay() - 1);
+
     
+
     const calculatePercentageChange = (currentValue: number, previousValue: number): number => {
       return ((currentValue - previousValue) / previousValue) * 100;
     };
   
-    const percentageChange = calculatePercentageChange(todayExpense, yesterdayExpense).toFixed(2);
+    const percentageChange = Number(calculatePercentageChange(todayExpense, yesterdayExpense).toFixed(2));
+    const sign = percentageChange > 0 ? '+' : ''
     
+    const daysData = Object.keys(weeksArray[0]).map(day => t(`days.${day}`));
+    const expensesDayData = Object.values(weeksArray[0]);
     
 
     const contextValue: ContextProps = {
@@ -106,7 +123,10 @@ export const ContextProvider: React.FC<Props> = ({children}) =>{
         totalWeekBalance,
         todayExpense,
         yesterdayExpense,
-        percentageChange
+        percentageChange,
+        daysData,
+        expensesDayData,
+        sign
     }
     
 

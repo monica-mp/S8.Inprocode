@@ -12,6 +12,7 @@ import {
   import { useElements } from '../../context/Context'
   import TodayExpense from '../todayExpense/todayExpense'
   import PercentVariation from '../percentVariation/percentVariation'
+  import { useTranslation } from 'react-i18next'
 
   
   ChartJS.register(
@@ -48,18 +49,15 @@ import {
   };
   
   export function Graphics() {
-  const { weeksArray } = useElements();
-
-  
-  const firstWeek = weeksArray[0];
-
+  const { daysData, expensesDayData } = useElements();
+  const { t } = useTranslation();
   
   const data = {
-    labels: Object.keys(firstWeek),
+    labels: daysData,
     datasets: [
       {
         label: 'Expenses',
-        data: Object.values(firstWeek),
+        data: expensesDayData,
         backgroundColor: '#ea775c',
         hoverBackgroundColor: '#74b5bf',
       },
@@ -67,10 +65,10 @@ import {
   };
     return (
         <div className='w-2/5 mx-auto bg-white rounded-3xl p-10 mt-5 font-sans' >
-          <p className='text-3xl font-bold  text-black pb-5'>Despeses-Última setmana</p>
+          <p className='text-3xl font-bold  text-black pb-5'>{t('DespesesSetmana')}</p>
           <Bar options={options} data={data} />
           <div className='my-5 border-t border-slate-300'></div>
-          <p >Despeses d'avui</p>
+          <p >{t('DespesesAvui')}</p>
           <div className='flex justify-between mt-3'>
             <TodayExpense/>
             <PercentVariation/>
