@@ -94,17 +94,14 @@ export const ContextProvider: React.FC<Props> = ({children}) =>{
     };
     const totalWeekBalance = calculateWeekBalance(weeksArray[currentWeek]);
 
-    //Get the day of the week
-    const getAdjustedDayIndex = (dayIndex: number): number => {
-      return dayIndex === -1 ? 6 : (dayIndex === 0 ? 6 : dayIndex - 1);
-    };
-  
-    //Get the expense for the day
+    
+
+    //Day expenses
     const getExpenseForDay = (dayIndex: number): number => {
-      const adjustedIndex = getAdjustedDayIndex(dayIndex);
+      const adjustedIndex = (dayIndex === -1 || dayIndex === 0) ? 6 : dayIndex - 1;
       const day = Object.keys(weeksArray[currentWeek])[adjustedIndex];    
       return weeksArray[currentWeek][day];
-    };    
+    };
     const todayExpense = getExpenseForDay(new Date().getDay());
     const yesterdayExpense = getExpenseForDay(new Date().getDay() - 1);
 
