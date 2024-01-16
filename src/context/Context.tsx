@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext } from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
 import { useTranslation } from 'react-i18next'
 
 // Creation of the context
@@ -27,7 +27,9 @@ interface ContextProps {
   percentageChange: number
   daysData: string[],
   expensesDayData: number[],
-  sign: string
+  sign: string,
+  currentWeek: number,
+  changeWeek: (direction: 'next' | 'prev') => void
 }
 
 
@@ -45,7 +47,7 @@ interface weekExpenses {
 
 export const ContextProvider: React.FC<Props> = ({children}) =>{
    const {t} = useTranslation();
-
+   const [currentWeek, setCurrentWeek] = useState(0);
 
     const weeksArray: weekExpenses[] = [
       {         
@@ -90,7 +92,7 @@ export const ContextProvider: React.FC<Props> = ({children}) =>{
       return Object.values(week).reduce((total, current) => total + current, 0);
     };   
 
-    const totalWeekBalance = calculateWeekBalance(weeksArray[0]);
+    const totalWeekBalance = calculateWeekBalance(weeksArray[currentWeek]);
 
     const getAdjustedDayIndex = (dayIndex: number): number => {
       return dayIndex === -1 ? 6 : (dayIndex === 0 ? 6 : dayIndex - 1);
@@ -98,8 +100,8 @@ export const ContextProvider: React.FC<Props> = ({children}) =>{
   
     const getExpenseForDay = (dayIndex: number): number => {
       const adjustedIndex = getAdjustedDayIndex(dayIndex);
-      const day = Object.keys(weeksArray[0])[adjustedIndex];    
-      return weeksArray[0][day];
+      const day = Object.keys(weeksArray[currentWeek])[adjustedIndex];    
+      return weeksArray[currentWeek][day];
     };
     
     const todayExpense = getExpenseForDay(new Date().getDay());
@@ -114,9 +116,18 @@ export const ContextProvider: React.FC<Props> = ({children}) =>{
     const percentageChange = Number(calculatePercentageChange(todayExpense, yesterdayExpense).toFixed(2));
     const sign = percentageChange > 0 ? '+' : ''
     
-    const daysData = Object.keys(weeksArray[0]).map(day => t(`days.${day}`));
-    const expensesDayData = Object.values(weeksArray[0]);
+    const daysData = Object.keys(weeksArray[currentWeek]).map(day => t(`days.${day}`));
+    const expensesDayData = Object.values(weeksArray[currentWeek]);
     
+    //N2. Change week
+    
+    const changeWeek = (direction: 'next' | 'prev'): void => {
+      const newWeek = direction === 'next' ? currentWeek + 1 : currentWeek - 1;
+  
+      if (newWeek >= 0 && newWeek < weeksArray.length) {
+        setCurrentWeek(newWeek);
+      }
+    };
 
     const contextValue: ContextProps = {
         weeksArray,
@@ -126,7 +137,9 @@ export const ContextProvider: React.FC<Props> = ({children}) =>{
         percentageChange,
         daysData,
         expensesDayData,
-        sign
+        sign,
+        currentWeek,
+        changeWeek
     }
     
 
