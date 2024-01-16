@@ -53,7 +53,7 @@ Implementación del proyecto en varios lenguajes: Catalán, Español e Inglés.
 
 - [x]  Implementar multilingüismo.
 
-- [x]  Subir el proyecto a Vercel.
+- [x]  Subir el proyecto a Vercel. Link: https://s8-inprocode.vercel.app/
 
 - [x]  Modificar la semana para la cual se muestran los datos.
 
